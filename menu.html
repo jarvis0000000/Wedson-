@@ -1,5 +1,8 @@
-<h1 class="page-title">Restaurant Menu</h1><div class="menu-grid"><div class="food-card"><img src="https://i.imgur.com/M6aCyx4.jpeg"><h3>Veg Chowmein</h3><p>₹90</p><a href="https://wa.me/919876543210?text=Order Veg Chowmein" class="btn">
-Buy
-</a></div><div class="food-card"><img src="https://i.imgur.com/h7ARgO5.jpeg"><h3>Veg Burger</h3><p>₹80</p><a href="https://wa.me/919876543210?text=Order Veg Burger" class="btn">
-Buy
-</a></div></div>
+<h1 class="page-title">Restaurant Menu</h1><div class="cart-bar">
+🛒 Cart: <span id="cartCount">0</span>
+<button onclick="orderNow()" class="order-btn">Order on WhatsApp</button>
+</div><div class="menu-grid"><div class="food-card"><img src="https://i.imgur.com/M6aCyx4.jpeg"><h3>Veg Chowmein</h3><p class="price">₹90</p><button onclick="addToCart('Veg Chowmein',90)" class="add-btn">
+Add to Cart
+</button></div><div class="food-card"><img src="https://i.imgur.com/h7ARgO5.jpeg"><h3>Veg Burger</h3><p class="price">₹80</p><button onclick="addToCart('Veg Burger',80)" class="add-btn">
+Add to Cart
+</button></div></div>
