@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedson hotel resorts - Restaurants</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- HEADER (same as index) -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="https://picsum.photos/id/29/48/48" alt="Logo">
+                <h1>LocalFood Hub</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="restaurants.html" class="nav-link active">Restaurants</a>
+                <a href="rooms.html" class="nav-link">Rooms</a>
+                <a href="banquet.html" class="nav-link">Banquet</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </nav>
+            <div class="header-right">
+                <button id="cart-btn" class="cart-btn">
+                    🛒
+                    <span id="cart-count" class="cart-count">0</span>
+                </button>
+                <a href="https://wa.me/919876543210" target="_blank" class="whatsapp-float">💬</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- SEARCH BAR -->
+    <div class="search-bar-page">
+        <div class="container">
+            <input type="text" id="restaurant-search" placeholder="Search restaurants or cuisine..." onkeyup="filterRestaurants()">
+        </div>
+    </div>
+
+    <!-- RESTAURANT GRID -->
+    <section class="restaurant-list">
+        <div class="container">
+            <div id="restaurant-grid" class="restaurant-grid"></div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Wedson Hotel And Resort- Made for small towns in Utter Pradesh</p>
+        </div>
+    </footer>
+
+    <!-- CART MODAL -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Your Cart</h3>
+                <span id="modal-close" class="close">&times;</span>
+            </div>
+            <div id="cart-items" class="cart-items"></div>
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total-price">₹0</span>
+            </div>
+            <button onclick="orderOnWhatsApp()" class="btn-whatsapp">Order on WhatsApp</button>
+            <button onclick="clearCart()" class="btn-secondary">Clear Cart</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
