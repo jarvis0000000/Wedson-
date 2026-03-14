@@ -1,19 +1,109 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wedson Hotel & Resort</title>
-<link rel="stylesheet" href="style.css">
-</head><body><header class="header"><div class="nav"><img src="https://i.imgur.com/cwKXVHB.jpeg" class="logo"><div class="menu-btn" onclick="toggleMenu()">☰</div></div><ul id="mobileMenu" class="mobile-menu"><li><a href="index.html">Home</a></li>
-<li><a href="menu.html">Menu</a></li>
-<li><a href="gallery.html">Gallery</a></li>
-<li><a href="rooms.html">Rooms</a></li>
-<li><a href="banquet.html">Banquet</a></li>
-<li><a href="contact.html">Contact</a></li></ul></header><section class="hero"><h1>Welcome to Wedson Hotel & Resort</h1><p>Luxury Stay • Delicious Food • Perfect Events</p><a href="rooms.html" class="btn">Book a Room</a>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedson Hotel And Resort- Home</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://picsum.photos/id/29/32/32" type="image/x-icon">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="https://picsum.photos/id/29/48/48" alt="Logo">
+                <h1>Wedson Hotel And Resort</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="restaurants.html" class="nav-link">Restaurants</a>
+                <a href="rooms.html" class="nav-link">Rooms</a>
+                <a href="banquet.html" class="nav-link">Banquet</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </nav>
+            <div class="header-right">
+                <button id="cart-btn" class="cart-btn">
+                    🛒
+                    <span id="cart-count" class="cart-count">0</span>
+                </button>
+                <a href="https://wa.me/919876543210" target="_blank" class="whatsapp-float">💬</a>
+            </div>
+        </div>
+    </header>
 
-</section><section class="about"><h2>About Our Hotel</h2><p>Wedson Hotel & Resort provides a premium hospitality experience
-with modern rooms, delicious restaurant food, and a beautiful
-banquet hall for weddings and events.
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Order Local Food in Ghatampur, Utter Pradesh</h2>
+            <p>Discover the best restaurants, hotels &amp; guest houses in your town</p>
+            <div class="search-box">
+                <input type="text" id="home-search" placeholder="Search restaurants or dishes...">
+                <button onclick="searchFromHome()">Search</button>
+            </div>
+        </div>
+    </section>
 
-</p></section><footer><p>© Wedson Hotel & Resort</p></footer><script src="script.js"></script></body>
-</html>
+    <!-- CATEGORIES -->
+    <section class="categories">
+        <div class="container">
+            <div class="category-grid">
+                <a href="restaurants.html" class="category-card">
+                    <img src="https://picsum.photos/id/201/300/300" alt="Indian">
+                    <span>Indian</span>
+                </a>
+                <a href="restaurants.html" class="category-card">
+                    <img src="https://picsum.photos/id/251/300/300" alt="Chinese">
+                    <span>Chinese</span>
+                </a>
+                <a href="restaurants.html" class="category-card">
+                    <img src="https://picsum.photos/id/29/300/300" alt="Pizza">
+                    <span>Pizza &amp; Fast Food</span>
+                </a>
+                <a href="restaurants.html" class="category-card">
+                    <img src="https://picsum.photos/id/30/300/300" alt="Burgers">
+                    <span>Burgers</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED RESTAURANTS -->
+    <section class="featured">
+        <div class="container">
+            <h2 class="section-title">Featured Restaurants</h2>
+            <div id="featured-grid" class="restaurant-grid"></div>
+            <div class="view-all">
+                <a href="restaurants.html" class="btn-primary">View All Restaurants</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 LocalFood Hub - Made for small towns in Utter Pradesh</p>
+            <p>Simplest way to order from your favourite local spots</p>
+        </div>
+    </footer>
+
+    <!-- CART MODAL -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Your Cart</h3>
+                <span id="modal-close" class="close">&times;</span>
+            </div>
+            <div id="cart-items" class="cart-items"></div>
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total-price">₹0</span>
+            </div>
+            <button onclick="orderOnWhatsApp()" class="btn-whatsapp">Order on WhatsApp</button>
+            <button onclick="clearCart()" class="btn-secondary">Clear Cart</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+      </html>
