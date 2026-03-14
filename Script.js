@@ -1,17 +1,67 @@
-// Smooth Scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if(target){
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-});
+let cart = []
+let whatsapp = ""
 
-// Booking form submission (basic demo)
-const bookingForm = document.querySelector('.booking-form');
-bookingForm.addEventListener('submit', function(e){
-  e.preventDefault();
-  alert('Thank you! Your availability request has been submitted.');
-});
+fetch("data.json")
+.then(res=>res.json())
+.then(data=>{
+
+document.getElementById("name").innerText=data.name
+document.getElementById("tagline").innerText=data.tagline
+
+whatsapp=data.whatsapp
+
+let menuHTML=""
+
+data.menu.forEach(food=>{
+
+menuHTML+=`
+
+<div class="card">
+
+<img src="${food.image}">
+
+<h3>${food.item}</h3>
+
+<p>₹${food.price}</p>
+
+<button onclick="addToCart('${food.item}',${food.price})">Add</button>
+
+</div>
+
+`
+
+})
+
+document.getElementById("menu").innerHTML=menuHTML
+
+})
+
+function addToCart(item,price){
+
+cart.push({item,price})
+
+alert(item+" added")
+
+}
+
+function orderWhatsApp(){
+
+let message="Food Order:%0A"
+
+cart.forEach(i=>{
+
+message+=i.item+" - ₹"+i.price+"%0A"
+
+})
+
+window.open(`https://wa.me/${whatsapp}?text=${message}`)
+
+}
+
+function bookRoom(){
+
+let msg="I want to book AC Room at Wedson Hotel & Resort"
+
+window.open(`https://wa.me/${whatsapp}?text=${msg}`)
+
+}
