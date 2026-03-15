@@ -27,6 +27,9 @@ const bookBanquet = document.getElementById('bookBanquet');
 const toast = document.getElementById('toast');
 const toastMessage = document.getElementById('toastMessage');
 
+// NEW: Bill Modal Elements
+const billModal = document.getElementById('billModal');
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
   initNavigation();
@@ -35,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initBanquetBooking();
   initSmoothScroll();
   initScrollEffects();
+  initBillModal();          // ← New
 });
 
 /**
@@ -71,7 +75,6 @@ function initNavigation() {
  * Scroll Effects
  */
 function initScrollEffects() {
-  // Navbar scroll effect
   window.addEventListener('scroll', function() {
     if (window.scrollY > 100) {
       navbar.classList.add('scrolled');
@@ -80,7 +83,6 @@ function initScrollEffects() {
     }
   });
 
-  // Initial check
   if (window.scrollY > 100) {
     navbar.classList.add('scrolled');
   }
@@ -137,16 +139,17 @@ function initCart() {
     closeCartModal();
   });
 
-  // Close on Escape key
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && cartModal.classList.contains('active')) {
-      closeCartModal();
-    }
-  });
-
   // Order on WhatsApp
   orderWhatsApp.addEventListener('click', function() {
     sendOrderToWhatsApp();
+  });
+
+  // ESC Key (now handles both cart & bill)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      if (cartModal.classList.contains('active')) closeCartModal();
+      if (billModal && billModal.classList.contains('active')) closeBillModal();
+    }
   });
 }
 
@@ -204,14 +207,42 @@ function getCartTotal() {
 
 function renderCartItems() {
   if (cart.length === 0) {
-    cartItems.innerHTML = '\n      <div class="cart-empty">\n        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">\n          <circle cx="9" cy="21" r="1"></circle>\n          <circle cx="20" cy="21" r="1"></circle>\n          <path d="m1 1 4 4h14l-3 9H7L1 1z"></path>\n        </svg>\n        <p>Your cart is empty</p>\n      </div>\n    ';
+    cartItems.innerHTML = `
+      <div class="cart-empty">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="m1 1 4 4h14l-3 9H7L1 1z"></path>
+        </svg>
+        <p>Your cart is empty</p>
+      </div>`;
     cartTotal.textContent = CONFIG.currency + '0';
     return;
   }
 
   var html = '';
   cart.forEach(function(item) {
-    html += '\n      <div class="cart-item">\n        <div class="cart-item-info">\n          <h4>' + item.name + '</h4>\n          <span>' + CONFIG.currency + item.price + ' each</span>\n        </div>\n        <div class="cart-item-actions">\n          <div class="cart-item-qty">\n            <button onclick="updateQuantity(\'' + item.name + '\', -1)">-</button>\n            <span>' + item.quantity + '</span>\n            <button onclick="updateQuantity(\'' + item.name + '\', 1)">+</button>\n          </div>\n          <button class="remove-item" onclick="removeFromCart(\'' + item.name + '\')">\n            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">\n              <path d="M3 6h18"></path>\n              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>\n              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>\n            </svg>\n          </button>\n        </div>\n      </div>\n    ';
+    html += `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <h4>${item.name}</h4>
+          <span>${CONFIG.currency}${item.price} each</span>
+        </div>
+        <div class="cart-item-actions">
+          <div class="cart-item-qty">
+            <button onclick="updateQuantity('${item.name}', -1)">-</button>
+            <span>${item.quantity}</span>
+            <button onclick="updateQuantity('${item.name}', 1)">+</button>
+          </div>
+          <button class="remove-item" onclick="removeFromCart('${item.name}')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+      </div>`;
   });
   cartItems.innerHTML = html;
   cartTotal.textContent = CONFIG.currency + getCartTotal();
@@ -245,6 +276,89 @@ function sendOrderToWhatsApp() {
 
   var whatsappUrl = 'https://wa.me/' + CONFIG.whatsappNumber + '?text=' + encodeURIComponent(message);
   window.open(whatsappUrl, '_blank');
+}
+
+/**
+ * ===================== BILL GENERATOR (OWNER PANEL) =====================
+ */
+function initBillModal() {
+  if (!billModal) return;
+
+  const billOverlay = billModal.querySelector('.modal-overlay');
+  if (billOverlay) {
+    billOverlay.addEventListener('click', closeBillModal);
+  }
+}
+
+function openBillModal() {
+  if (cart.length === 0) {
+    showToast('Your cart is empty!');
+    return;
+  }
+
+  closeCartModal();               // close cart first
+  billModal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  updateBillPreview();
+}
+
+function closeBillModal() {
+  billModal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function updateBillPreview() {
+  const container = document.getElementById('bill-preview-items');
+  container.innerHTML = '';
+
+  let total = 0;
+
+  cart.forEach(function(item) {
+    const subtotal = item.price * item.quantity;
+    total += subtotal;
+
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex; justify-content:space-between; margin:10px 0; padding:10px 0; border-bottom:1px solid #333;';
+    div.innerHTML = `
+      <span>${item.name} × ${item.quantity}</span>
+      <span>${CONFIG.currency}${subtotal}</span>
+    `;
+    container.appendChild(div);
+  });
+
+  document.getElementById('bill-total').textContent = CONFIG.currency + total;
+}
+
+function sendBillViaWhatsApp() {
+  const name = document.getElementById('customer-name').value.trim();
+  const phone = document.getElementById('customer-phone').value.trim();
+  const address = document.getElementById('customer-address').value.trim();
+
+  if (!name || !phone || phone.length !== 10 || !address) {
+    showToast('Please enter Name, 10-digit Phone & Address');
+    return;
+  }
+
+  let total = getCartTotal();
+
+  let message = `Wedson Hotel & Resort Bill\n\n`;
+  message += `Customer: ${name}\n`;
+  message += `Phone: ${phone}\n`;
+  message += `Address: ${address}\n\n`;
+  message += `Ordered Items:\n`;
+
+  cart.forEach(function(item) {
+    message += `- ${item.name} × ${item.quantity} = ${CONFIG.currency}${(item.price * item.quantity)}\n`;
+  });
+
+  message += `\nTotal: ${CONFIG.currency}${total}\n\n`;
+  message += `Thank you for visiting Wedson Hotel & Resort!\n`;
+  message += `Website: ${window.location.href}`;
+
+  const whatsappUrl = `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+
+  closeBillModal();
 }
 
 /**
@@ -297,6 +411,9 @@ function showToast(message) {
   }, 3000);
 }
 
-// Make functions globally available for onclick handlers
+// Make functions globally available
 window.updateQuantity = updateQuantity;
 window.removeFromCart = removeFromCart;
+window.openBillModal = openBillModal;
+window.closeBillModal = closeBillModal;
+window.sendBillViaWhatsApp = sendBillViaWhatsApp;
