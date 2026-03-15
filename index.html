@@ -475,6 +475,40 @@
     </div>
   </section>
 
+<script>
+document.getElementById('generateBill').addEventListener('click', () => {
+  const name = document.getElementById('customerName').value.trim();
+  const phone = document.getElementById('customerPhone').value.trim();
+
+  if(!name || !phone) {
+    alert('Please enter customer name and phone!');
+    return;
+  }
+
+  const items = document.querySelectorAll('#menuItems input[type="checkbox"]:checked');
+  if(items.length === 0) {
+    alert('Please select at least one item!');
+    return;
+  }
+
+  let total = 0;
+  let billText = `*Wedson Hotel & Resort Bill*\nCustomer: ${name}\nPhone: ${phone}\n\nItems:\n`;
+
+  items.forEach(item => {
+    const itemName = item.dataset.name;
+    const itemPrice = parseInt(item.dataset.price);
+    total += itemPrice;
+    billText += `- ${itemName}: ₹${itemPrice}\n`;
+  });
+
+  billText += `\n*Total: ₹${total}*`;
+
+  // WhatsApp link
+  const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(billText)}`;
+  window.open(whatsappUrl, '_blank');
+});
+</script>
+  
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
