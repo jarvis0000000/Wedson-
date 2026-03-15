@@ -475,39 +475,32 @@
     </div>
   </section>
 
-<script>
-document.getElementById('generateBill').addEventListener('click', () => {
-  const name = document.getElementById('customerName').value.trim();
-  const phone = document.getElementById('customerPhone').value.trim();
+<!-- Bill Section -->
+<section class="section bill" id="bill">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Generate Bill</span>
+      <h2>Customer Bill</h2>
+      <p>Enter customer details and select items</p>
+    </div>
+    <div class="bill-form">
+      <input type="text" id="customerName" placeholder="Customer Name">
+      <input type="tel" id="customerPhone" placeholder="Customer Phone">
 
-  if(!name || !phone) {
-    alert('Please enter customer name and phone!');
-    return;
-  }
+      <h3>Select Menu Items</h3>
+      <div id="menuItems">
+        <label><input type="checkbox" data-name="Veg Chowmein" data-price="120"> Veg Chowmein ₹120</label><br>
+        <label><input type="checkbox" data-name="Classic Burger" data-price="150"> Classic Burger ₹150</label><br>
+        <label><input type="checkbox" data-name="Paneer Tikka" data-price="180"> Paneer Tikka ₹180</label><br>
+        <label><input type="checkbox" data-name="Chicken Biryani" data-price="250"> Chicken Biryani ₹250</label><br>
+        <label><input type="checkbox" data-name="Dal Makhani" data-price="160"> Dal Makhani ₹160</label><br>
+        <label><input type="checkbox" data-name="Fresh Mocktail" data-price="80"> Fresh Mocktail ₹80</label>
+      </div>
 
-  const items = document.querySelectorAll('#menuItems input[type="checkbox"]:checked');
-  if(items.length === 0) {
-    alert('Please select at least one item!');
-    return;
-  }
-
-  let total = 0;
-  let billText = `*Wedson Hotel & Resort Bill*\nCustomer: ${name}\nPhone: ${phone}\n\nItems:\n`;
-
-  items.forEach(item => {
-    const itemName = item.dataset.name;
-    const itemPrice = parseInt(item.dataset.price);
-    total += itemPrice;
-    billText += `- ${itemName}: ₹${itemPrice}\n`;
-  });
-
-  billText += `\n*Total: ₹${total}*`;
-
-  // WhatsApp link
-  const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(billText)}`;
-  window.open(whatsappUrl, '_blank');
-});
-</script>
+      <button class="btn btn-primary" id="generateBill">Generate & Send Bill</button>
+    </div>
+  </div>
+</section>
   
   <!-- Footer -->
   <footer class="footer">
